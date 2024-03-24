@@ -1,0 +1,44 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Vente de voiture{% endblock %}
+
+{% block body %}
+<style>
+    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
+    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+</style>
+<nav>
+<h2>
+<img src="{{asset('/image/logo.jpg')}}" alt="logo">
+    <a href="{{ path('listeProduit') }}">Liste des produits</a>
+        <a href="{{ path('app_login')}}"> espace admin</a>
+        {% if app.user %}
+            <div class="mb-3">
+                Vous êtes connecté : {{ app.user.userIdentifier }}, <a href="{{ path('app_logout') }}">Déconnection</a>
+            </div>
+        {% endif %}
+
+</h2>
+</nav>
+<div class="example-wrapper">
+    <h1>Vente de voiture</h1>
+
+    <h2> 5 derniers modèles</h2>
+    {% for produit in liste_produit|reverse %}
+     {% if loop.index <= 5 %}
+     
+
+    <ul>
+        <li>Titre = {{ produit.nom }}</li>
+        <li>Description = {{ produit.description }} </li>
+        <li><a href="{{ path('route_produit', {'id': (produit.id) }) }}"><img src="{{ asset(produit.image) }}" /></a> </li>
+        <li>Stock = {{ produit.stock }} </li>
+    </ul>
+          {% endif %}  
+
+        {% endfor %}
+
+</div>
+<h2>    <a href="{{ path('route_produit', {'id': 1}) }}">Article 1</a>
+</h2>
+{% endblock %}

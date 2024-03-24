@@ -1,0 +1,56 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Vente de voiture{% endblock %}
+
+{% block body %}
+<style>
+    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
+    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+</style>
+<nav>
+    <a href="{{ path('app_home') }}">
+<img src="{{asset('/image/logo.jpg')}}" alt="logo" ></a>
+</nav>
+<div class="example-wrapper">
+    <h1>Vente de voiture</h1>
+
+    <h2>Modèles :{{ produit.nom }} </h2>
+
+    <ul>
+        <li>Description = {{ produit.description }} </li>
+        <li>Stock = {{ produit.stock }} </li>
+        {% for produit in liste|reverse %}
+          {% if loop.index <= 5 %}
+        <li>Commentaires : {{produit.contenu}}</li>
+        <li>Titre : {{produit.titre}}</li>
+
+        {% endif %}
+        {% endfor %}
+    </ul>
+    <div>
+    <img src="{{asset(produit.image)}}" alt="#">
+</div>
+<h2>
+{% if produit.id > 1 %}
+    <a href="{{ path('route_produit', {'id': (produit.id-1) }) }}">Article  {{ produit.id-1 }}</a>
+{% else %}
+    <a href="{{ path('route_produit', {'id': 1}) }}">Article 1</a>
+{% endif %}
+
+{% if produit.id < 6 %}
+    <a href="{{ path('route_produit', {'id': (produit.id+1) }) }}">Article {{ produit.id+1 }}</a>
+{% else %}
+    <a href="{{ path('route_produit', {'id': 1}) }}">Article 1</a>
+{% endif %}
+</h2>
+    {{ form_start(form) }}
+        
+   
+        {{ form_widget(form) }}
+        
+        {{ form_rest(form) }}
+        <button type="submit">Enregistrer</button>
+    {{ form_end(form) }}
+</div>
+
+{% endblock %}
