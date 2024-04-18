@@ -10,25 +10,38 @@
 <nav>
     <a href="{{ path('app_home') }}">
 <img src="{{asset('/image/logo.jpg')}}" alt="logo" ></a>
-
+    <a class="container rounded bg-light link-dark link-underline-light"href="{{ path('app_home') }}">Accueil</a>
 </nav>
-<div class="example-wrapper">
-    <h1>Vente de voiture</h1>
+<div class="text-center">
+    <h1 >Vente de voiture</h1>
 
     <h2> modèles</h2>
+    </div>
+    <div class="d-flex flex-wrap">
+
          {% for produit in listeProduit %}
+<div class="d-flex flex-row align-content-between ">
+<div class=" row p-2 m-2 gap-3 ">
+<div class="card col-4 p-2  bg-light" style="width: 18rem;">
+  <img src="{{ asset(produit.image) }}"class="card-img-top" alt="#" /></a> </li>
+
+  <div class="card-body">
+    <h5 class="card-title">Titre = {{ produit.nom }}
+</h5>
+    <p class="card-text">Description = {{ produit.description }}
+</p>
+        <p>Stock = {{ produit.stock }} </p>
+
+    <a href="{{ path('route_produit', {'id': (produit.id) }) }}" class="btn btn-dark">Détails produit : {{ produit.nom }}</a>
+  </div>
+</div>
+</div>
+</div>
 
 
-    <ul>
-        <li>Titre = {{ produit.nom }}</li>
-        <li>Description = {{ produit.description }} </li>
-        <li><a href="{{ path('route_produit', {'id': (produit.id) }) }}"><img src="{{ asset(produit.image) }}" /></a> </li>
-        <li>Stock = {{ produit.stock }} </li>
-    </ul>
 
         {% endfor %}
 
 </div>
-<h2>    <a href="{{ path('route_produit', {'id': 1}) }}">Article 1</a>
-</h2>
+
 {% endblock %}

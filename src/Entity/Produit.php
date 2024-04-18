@@ -3,10 +3,12 @@
 namespace App\Entity;
 
 use App\Repository\ProduitRepository;
+use Cocur\Slugify\Slugify;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\String\Slugger\SluggerInterface;
 
 #[ORM\Entity(repositoryClass: ProduitRepository::class)]
 class Produit
@@ -29,7 +31,7 @@ class Produit
     private ?int $stock = null;
 
     #[ORM\OneToMany(targetEntity: Commentaire::class, mappedBy: 'produit', orphanRemoval: true)]
-    
+
     private Collection $commentaires;
 
     public function __construct()
@@ -89,7 +91,6 @@ class Produit
 
         return $this;
     }
-
     /**
      * @return Collection<int, Commentaire>
      */

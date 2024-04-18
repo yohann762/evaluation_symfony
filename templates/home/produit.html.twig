@@ -10,47 +10,46 @@
 <nav>
     <a href="{{ path('app_home') }}">
 <img src="{{asset('/image/logo.jpg')}}" alt="logo" ></a>
+    <a class="container rounded bg-light link-dark link-underline-light"href="{{ path('app_home') }}">Accueil</a>
+
 </nav>
 <div class="example-wrapper">
     <h1>Vente de voiture</h1>
-
     <h2>Modèles :{{ produit.nom }} </h2>
+<div class="container text-center">
+<div class=" row p-2  gap-3">
+<div class="card col-6 p-2 align-self-stretch bg-light" style="width: 18rem;">
+  <img src="{{ asset(produit.image) }}"class="card-img-top" alt="#" /></a> </li>
 
-    <ul>
-        <li>Description = {{ produit.description }} </li>
-        <li>Stock = {{ produit.stock }} </li>
+  <div class="card-body bg-dark text-light">
+    <h5 class="card-title">Titre = {{ produit.nom }}
+</h5>
+    <p class="card-text">Description = {{ produit.description }}
+</p>
+        <p>Stock = {{ produit.stock }} </p>
         {% for produit in liste|reverse %}
           {% if loop.index <= 5 %}
-        <li>Commentaires : {{produit.contenu}}</li>
-        <li>Titre : {{produit.titre}}</li>
+        <p>Titre : {{produit.titre}}</p>
+        <p>Commentaires : {{produit.contenu}}</p>
 
         {% endif %}
         {% endfor %}
-    </ul>
-    <div>
-    <img src="{{asset(produit.image)}}" alt="#">
-</div>
-<h2>
-{% if produit.id > 1 %}
-    <a href="{{ path('route_produit', {'id': (produit.id-1) }) }}">Article  {{ produit.id-1 }}</a>
-{% else %}
-    <a href="{{ path('route_produit', {'id': 1}) }}">Article 1</a>
-{% endif %}
 
-{% if produit.id < 6 %}
-    <a href="{{ path('route_produit', {'id': (produit.id+1) }) }}">Article {{ produit.id+1 }}</a>
-{% else %}
-    <a href="{{ path('route_produit', {'id': 1}) }}">Article 1</a>
-{% endif %}
-</h2>
+  </div>
+</div>
+<p class="container">
+{% form_theme form with ['foundation_5_layout.html.twig'] only %}
     {{ form_start(form) }}
-        
-   
+
+<div class="row w-25">
         {{ form_widget(form) }}
-        
+<div class="col">
         {{ form_rest(form) }}
         <button type="submit">Enregistrer</button>
+        </div>
     {{ form_end(form) }}
+    </p>
+</div>
 </div>
 
 {% endblock %}

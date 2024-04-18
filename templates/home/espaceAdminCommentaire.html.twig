@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Espace admin commentaire{% endblock %}
+
+{% block body %}
+<h1>admin</h1>
+    <a href="{{ path('app_logout')}}">Déconnection</a>
+    <a href="{{ path('espaceAdmin')}}">Ajout produit</a>
+
+    <h2>Modification</h2>
+    <div>
+</div>
+    <ul>
+        <li>id Produit = {{produit.id}}</li>
+        <li>Titre = {{ produit.nom }}</li>
+        <li>Description = {{ produit.description }} </li>
+        <li>Stock = {{ produit.stock }} </li>
+        <li> commentaire : {{commentaires}}</li>
+        </ul>
+ <div class="container p-1">
+
+   {{ form_start(form) }}
+
+<div class="row p-2 w-75 ">
+<div class="col ms-2 g-3 justify-content-between">
+        {{ form_rest(form) }}
+        <div class="row p-2 w-25 gx-3">
+        <button type="submit">Enregistrer</button>
+        </div>
+    </div></div>
+    {{ form_end(form) }}</div>
+
+{% endblock %}

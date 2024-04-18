@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Espace admin{% endblock %}
+
+{% block body %}
+<h1>admin</h1>
+
+    <a href="{{ path('espaceAdmin')}}">Ajout produit</a>
+
+    <a href="{{ path('app_logout')}}">Déconnection</a>
+
+    </h2>
+ <div>
+     {% for produit in produits %}
+    <ul>
+    <li>{{produit.id}}</li>
+        <li>Titre = {{ produit.nom }}</li>
+        <li>Description = {{ produit.description }} </li>
+        <li>Stock = {{ produit.stock }} </li>
+        
+            <a href="{{ path('espaceAdminSupp',{'id': (produit.id)})}}">Supprimer</a>
+    </ul>
+{% endfor %}
+</div>
+
+<div>
+
+</div>
+
+
+{% endblock %}

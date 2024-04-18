@@ -10,14 +10,13 @@
 <nav>
 <h2>
 <img src="{{asset('/image/logo.jpg')}}" alt="logo">
-    <a href="{{ path('listeProduit') }}">Liste des produits</a>
-        <a href="{{ path('app_login')}}"> espace admin</a>
+    <a class="container rounded bg-light link-dark link-underline-light"href="{{ path('listeProduit') }}">Liste des produits</a>
+        <a class="container rounded bg-light link-dark link-underline-light" href="{{ path('app_login')}}"> espace admin</a>
         {% if app.user %}
             <div class="mb-3">
-                Vous êtes connecté : {{ app.user.userIdentifier }}, <a href="{{ path('app_logout') }}">Déconnection</a>
+                Vous êtes connecté : {{ app.user.userIdentifier }}, <a href="{{ path('app_logout') }}"class="container rounded bg-light link-dark link-underline-light">Déconnection</a>
             </div>
         {% endif %}
-
 </h2>
 </nav>
 <div class="example-wrapper">
@@ -26,19 +25,27 @@
     <h2> 5 derniers modèles</h2>
     {% for produit in liste_produit|reverse %}
      {% if loop.index <= 5 %}
-     
+<div class="container text-center">
+<div class=" row  gap-3">
+<div class="card col-6 p-2 align-self-stretch bg-light" style="width: 18rem;">
+  <img src="{{ asset(produit.image) }}"class="card-img-top" alt="#" /></a>
 
-    <ul>
-        <li>Titre = {{ produit.nom }}</li>
-        <li>Description = {{ produit.description }} </li>
-        <li><a href="{{ path('route_produit', {'id': (produit.id) }) }}"><img src="{{ asset(produit.image) }}" /></a> </li>
-        <li>Stock = {{ produit.stock }} </li>
-    </ul>
-          {% endif %}  
+  <div class="card-body">
+    <h5 class="card-title">Titre = {{ produit.nom }}
+</h5>
+    <p class="card-text">Description = {{ produit.description }}
+</p>
+        <p>Stock = {{ produit.stock }} </p>
 
-        {% endfor %}
-
+    <a href="{{ path('route_produit', {'id': (produit.id) }) }}" class="btn btn-dark">Détails produit : {{ produit.nom }}</a>
+  </div>
 </div>
-<h2>    <a href="{{ path('route_produit', {'id': 1}) }}">Article 1</a>
-</h2>
+
+
+          {% endif %}
+
+     {% endfor %}
+     </div>
+</div>
+</div>
 {% endblock %}
