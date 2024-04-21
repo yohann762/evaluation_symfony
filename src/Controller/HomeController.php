@@ -63,9 +63,7 @@ class HomeController extends AbstractController
             $commentaire = $form->getData();
             $entityManager->persist($commentaire);
             $entityManager->flush();
-            return $this->redirectToRoute('listeProduit');
-            ;
-
+            return $this->redirectToRoute('listeProduit');;
         }
         return $this->render('home/produit.html.twig', [
             'produit' => $produit,
@@ -118,14 +116,20 @@ class HomeController extends AbstractController
 
 
         $this->addFlash('message', 'Produit supprimé avec succès');
-        return $this->redirectToRoute('espaceAdmin');
-        ;
+        return $this->redirectToRoute('espaceAdmin');;
     }
     #[IsGranted("ROLE_ADMIN")]
 
     #[Route('/modifier/{id}', name: 'app_produit_edit', methods: ['GET', 'POST'])]
-    public function edit(ProduitRepository $repo, Request $request, Produit $produit, EntityManagerInterface $entityManager): Response
+    public function edit(int $id, CommentaireRepository $commentaireRepository, ProduitRepository $repo, Request $request, Produit $produit, EntityManagerInterface $entityManager): Response
     {
+        $commentaires = $commentaireRepository->findBy(['produit' => $id]);
+
+        foreach ($commentaires as $commentaire) {
+            // Access comment properties within the loop
+            $commentaire->getContenu();
+        }
+
         $produits = $repo->findAll();
         $product = $produit->getId();
         $formm = $this->createForm(Admin3Type::class, $produit);
@@ -143,73 +147,74 @@ class HomeController extends AbstractController
             'produit' => $produit,
             'produits' => $produits,
             'product' => $product,
+            'commentaire' => $commentaire,
             'formm' => $formm->createView()
         ]);
     }
-    #[Route('/espaceAdmin/comment', name: 'espaceAdminComment')]
-    public function espaceAdminComment(int $id,CommentaireRepository $commentaireRepository,ProduitRepository $repo, EntityManagerInterface $entityManager, Request $request): Response
-    {
-        $produits = $repo->findAll();
-        $produit = $repo->getId();
-        $liste = $commentaireRepository->findBy(['produit' => $id]);
-        $commentaires = $commentaireRepository->findAll();
-        $commentaires = $commentaireRepository->getId();
+    #[IsGranted("ROLE_ADMIN")]
 
-        $commentaire = new Commentaire();
-        $form = $this->createForm(CommentaireClientType::class, $commentaire);
+    #[Route('/modifier/{id}/commentaire/{idCommentaire}', name: 'espaceAdminComment', methods: ['GET', 'POST'])]
+
+    public function espaceAdminComment(int $id, $idCommentaire, CommentaireRepository $commentaireRepository, ProduitRepository $repo, EntityManagerInterface $entityManager, Request $request): Response
+    {
+        $produit = $repo->find($id);
+        if (!$produit) {
+            throw $this->createNotFoundException('Produit introuvable');
+        }
+        $liste = $commentaireRepository->findBy(['produit' => $id]);
+        $commentaire = $commentaireRepository->find($idCommentaire);
+        if (!$commentaire) {
+            throw $this->createNotFoundException('Commentaire introuvable');
+        }
+
+        $produits = $repo->findAll();
+        foreach ($commentaire as $commentaires) {
+            $commentaire->getContenu();
+            $commentaire->getTitre();
+
+        }
+        $form = $this->createForm(CommentaireClientType::class, $commentaire, ['csrf_protection' => true]);
         $form->handleRequest($request);
+
         if ($form->isSubmitted() && $form->isValid()) {
+
             $commentaire = $form->getData();
             $entityManager->persist($commentaire);
             $entityManager->flush();
+
+            return $this->redirectToRoute('espaceAdmin');
         }
-
-
-
         return $this->render('home/espaceAdminCommentaire.html.twig', [
-            'produit' => $produit,
             'produits' => $produits,
-            'commentaire'=>$commentaire,
-            'liste'=>$liste,
-            'commentaires'=>$commentaires,
-
+            'commentaire' => $commentaire,
+            'produit' => $produit,
+            'liste' => $liste,
             'form' => $form->createView()
         ]);
     }
-    #[Route('/espaceAdminSuppComment/{id}', name: 'espaceAdminSuppComment')]
 
-    public function espaceAdminASupComment(Commentaire $commentaire, CommentaireRepository $commentaireRepository,Produit $produit, ProduitRepository $repo, EntityManagerInterface $entityManager): Response
+
+    #[Route('/modifier/{id}/supprimer-commentaire/{idCommentaire}', name: 'espaceAdminSuppComment')]
+
+    public function espaceAdminASupComment( CommentaireRepository $commentaireRepository,Request $request, EntityManagerInterface $entityManager): Response
     {
 
-        $commentaires = $repo->findAll();
-        $commentaires = $commentaire->getId();
+    $idCommentaire = $request->get('idCommentaire');
 
-        $entityManager->remove($commentaire);
-        $entityManager->flush();
+    $commentaire = $commentaireRepository->find($idCommentaire);
 
-
-
-
-        $this->addFlash('message', 'Commentaire supprimé avec succès');
+    if (!$commentaire) {
+        $this->addFlash('error', 'Commentaire introuvable');
         return $this->redirectToRoute('espaceAdmin');
-        ;
     }
 
+    $entityManager->remove($commentaire);
+    $entityManager->flush();
 
+    $this->addFlash('message', 'Commentaire supprimé avec succès');
 
+    return $this->redirectToRoute('espaceAdmin');
     }
+}
 
 
-   /* public function formulaire(EntityManagerInterface $entityManager, Request $request, $form): Response{
-        $commentaire = new Commentaire();
-        $form = $this->createForm(CommentaireClientType::class, $commentaire);
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()){
-            $entityManager->persist($commentaire);
-            $entityManager->flush();
-                    }
-        return $this->render('home/produit.html.twig', [
-            'form' => $form->createView()
-        ]);
-
-    }*/
